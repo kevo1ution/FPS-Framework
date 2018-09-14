@@ -8,6 +8,20 @@ window.addEventListener('DOMContentLoaded', function(){
 	//engine handles everything and rendering
 	var engine = new BABYLON.Engine(canvas, true);
 	
+	var createBase = function (){
+		
+	}
+	var createSky = function (scene){
+		var skyMaterial = new BABYLON.SkyMaterial("skyMaterial", scene);
+		skyMaterial.backFaceCulling = false;
+
+		var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+		skybox.material = skyMaterial;
+
+	}
+	var createChar = function (){
+		
+	}
 	var createScene = function (){
 		//set up the scene we are returning, and physics
 		var scene = new BABYLON.Scene(engine);
@@ -71,6 +85,7 @@ window.addEventListener('DOMContentLoaded', function(){
 	//call the create Scene function
 	var scene = createScene();
 	
+	//render loop 
 	engine.runRenderLoop(function(){
 
 		scene.render();
