@@ -10,8 +10,9 @@ window.addEventListener('DOMContentLoaded', function(){
 	
 	var createBase = function (){
 		//ground definition
-		var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 1, scene);
+		var ground = BABYLON.Mesh.CreateGround("ground1", 1000, 1000, 1, scene);
 		ground.physicsImposter = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
+		ground.checkCollisions = true;
 	}
 	var createSky = function (scene){
 		var skyMaterial = new BABYLON.SkyMaterial("skyMaterial", scene);
@@ -42,30 +43,33 @@ window.addEventListener('DOMContentLoaded', function(){
 		var gravityVector = new BABYLON.Vector3(0, -9.81, 0);
 		var physicsPlugin = new BABYLON.CannonJSPlugin();
 		scene.enablePhysics(gravityVector, physicsPlugin);
-		scene.clearColor = new BABYLON.Color3.White();		
+		scene.clearColor = new BABYLON.Color3.White();
+		scene.collisionsEnabled = true;
 	}
-	var createCamera = function(scene){	
+	var createCamera = function(scene, box){	
 		/*CAMERAS!
 			FreeCamera - moves freely and can be controlled if controls are setup
 			ArcRotateCamera - based on target and rotation
 			FollowCamera - follows a locked target
 		*/
-		var camera = new BABYLON.ArcRotateCamera("followCamera", Math.PI/2, Math.PI/2, 10, BABYLON.Vector3.Zero(), scene);
+		var camera = new BABYLON.ArcRotateCamera("followCamera", Math.PI/2, Math.PI/2, 10, scene.getMeshByID("Box"), scene);
 		camera.attachControl(canvas, true);
+		camera.collisionRadius = new BABYLON.Vector3(0.5, 0.5, 0.5);
+		camera.checkCollisions = true;
+		//camera.maxZ = 100;
 	}
 	var createChar = function (scene){
 
 	}
 	var createObjects = function(scene){
 		//box definition
-		/*
 		var box = BABYLON.Mesh.CreateBox("Box", 1.0, scene);
 		var material = new BABYLON.StandardMaterial("material1", scene);
 		box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
 		box.physicsImpostor.setLinearVelocity(new BABYLON.Vector3(0,1,0));
 		box.position = new BABYLON.Vector3(0, 3, 0);
 		box.material = material;
-		*/
+		box.checkCollisions = true;
 		
 		/* Material Components
 		material.diffuseColor = new BABYLON.Color3(1, 0, 0);
@@ -122,11 +126,43 @@ window.addEventListener('DOMContentLoaded', function(){
 	
 	//call the create Scene function
 	var scene = createScene();
+	var vx = 0;
+	var vy = 0;
 	
 	//render loop 
 	engine.runRenderLoop(function(){
+		var box = scene.getMeshByID("Box");
+		box.position.x += vx;
+		box.position.z += vy;
 
 		scene.render();
+	});
+	
+	//control events
+	document.addEventListener("keydown", function(keyCode){
+		const key = keyCode.key;
+		if(key == "w"){
+			vy += .1;
+		}else if(key == "s"){
+			vy -= .1;
+		}else if(key == "a"){
+			vx -= .1;
+		}else if(key == "d"){
+			vx+= .1;
+		}
+	});
+	
+	document.addEventListener("keyup", function(keyCode){
+		const key = keyCode.key;
+		if(key == "w"){
+			vy -= .1;
+		}else if(key == "s"){
+			vy += .1;
+		}else if(key == "a"){
+			vx += .1;
+		}else if(key == "d"){
+			vx-= .1;
+		}
 	});
 });
 
