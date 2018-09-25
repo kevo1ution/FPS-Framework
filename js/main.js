@@ -1,4 +1,11 @@
 
+//standard functions
+function sleep(ms){
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+
 //start everything
 window.addEventListener('DOMContentLoaded', function(){
 	
@@ -133,10 +140,19 @@ window.addEventListener('DOMContentLoaded', function(){
 	engine.runRenderLoop(function(){
 		var box = scene.getMeshByID("Box");
 		box.position.x += vx;
-		box.position.z += vy;
-
+		box.position.z += vy
+		
 		scene.render();
 	});
+	
+	//wait loop
+	var testfunc = async function(){
+		//create bulelt
+		await sleep(2000);
+		createBullet(scene, new BABYLON.Vector3(0, 5, 0), new BABYLON.Vector3(0, 1, 0), 2);
+	};
+	
+	testfunc();
 	
 	//control events
 	document.addEventListener("keydown", function(keyCode){
