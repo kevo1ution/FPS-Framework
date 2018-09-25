@@ -109,11 +109,10 @@ window.addEventListener('DOMContentLoaded', function(){
 	}
 	var createObjects = function(scene){
 		//box definition
-		var box = BABYLON.Mesh.CreateBox("Box", 1.0, scene);
+		var box = BABYLON.Mesh.CreateBox("Box", 2.0, scene);
 		var material = new BABYLON.StandardMaterial("material1", scene);
-		box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
-		box.physicsImpostor.setLinearVelocity(new BABYLON.Vector3(0,1,0));
-		box.position = new BABYLON.Vector3(0, 3, 0);
+		box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 10, restitution: 0 }, scene);
+		box.position = new BABYLON.Vector3(-20, 10, -20);
 		box.material = material;
 		box.checkCollisions = true;
 		
@@ -123,18 +122,24 @@ window.addEventListener('DOMContentLoaded', function(){
 		material.specularColor = BABYLON.Color3.Blue(); //reflected color from lights
 		material.alpha = 0.5; //changes transparency
 		*/		
-		
-				
 	}
 	var createLight = function(scene){
 		/*LIGHTS!
 			Pointlight - like the sun
 			SpotLight - like flash light
 		*/
+		
+		/*
 		var light = new BABYLON.PointLight("spotLight", new BABYLON.Vector3(0, 10, 0), scene);
 		light.diffuse = new BABYLON.Color3(1,1,1);
 		light.position = new BABYLON.Vector3(10, 10, 0); //parenting light to a camera makes it move with the camera!
+		*/
 		
+		var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+		light.diffuse = new BABYLON.Color3(0.2, 0.2, 0.2);
+		light.specular = new BABYLON.Color3(0, 0, 0);
+		light.groundColor = new BABYLON.Color3(0, 0, 0);
+				
 		/* //actionManager for binding spacebar
 		scene.actionManager = new BABYLON.ActionManager(scene);
 		scene.actionManager.registerAction(
@@ -175,6 +180,9 @@ window.addEventListener('DOMContentLoaded', function(){
 	var vx = 0;
 	var vy = 0;
 	
+	//create the gun
+	var gun = createGun(1, 1, scene.getMeshByID("Box"), new BABYLON.Vector3(0, 1, 0), new BABYLON.Vector3(1, 1, 0) , scene);
+	
 	//render loop 
 	engine.runRenderLoop(function(){
 		var box = scene.getMeshByID("Box");
@@ -182,42 +190,60 @@ window.addEventListener('DOMContentLoaded', function(){
 		box.position.z += vy
 		
 		scene.render();
+		
+		vx = 0;
+		vy = 0;
 	});
 	
 	//wait loop
 	var testfunc = async function(){
 		//create bulelt
 		await sleep(2000);
-		createBullet(scene, new BABYLON.Vector3(0, 5, 0), new BABYLON.Vector3(0, 1, 0), 2);
+		//create test targets
+		for(var x = 1; x < 5; x++){
+			for(var y = 1; y < 5; y++){
+				var temp = BABYLON.Mesh.CreateBox("", 3.0, scene);
+				var material = new BABYLON.StandardMaterial("material1", scene);
+				//temp.physicsImpostor = new BABYLON.PhysicsImpostor(temp, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0 }, scene);
+				temp.position = new BABYLON.Vector3(5 * x, 1, 5 * y);
+				temp.material = material;
+			}
+		}
 	};
 	
 	testfunc();
 	
 	//control events
-	document.addEventListener("keydown", function(keyCode){
+	document.addEventListener("keypress", function(keyCode){
 		const key = keyCode.key;
 		if(key == "w"){
-			vy += .1;
+			vy += .3;
 		}else if(key == "s"){
-			vy -= .1;
+			vy -= .3;
 		}else if(key == "a"){
-			vx -= .1;
+			vx -= .3;
 		}else if(key == "d"){
-			vx+= .1;
+			vx += .3;
 		}
 	});
 	
 	document.addEventListener("keyup", function(keyCode){
 		const key = keyCode.key;
 		if(key == "w"){
-			vy -= .1;
+			vy -= .3;
 		}else if(key == "s"){
-			vy += .1;
+			vy += .3;
 		}else if(key == "a"){
-			vx += .1;
+			vx += .3;
 		}else if(key == "d"){
-			vx-= .1;
+			vx -= .3;
 		}
+	});
+	
+	//canvas click event 
+	canvas.addEventListener('click', function(event){
+		gun.shoot(); 
+		console.log(gun.firing);
 	});
 });
 
