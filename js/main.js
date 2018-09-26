@@ -33,17 +33,10 @@ ideas:
 
 */
 
-
-
-
-
-
 //standard functions
 function sleep(ms){
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-
 
 //start everything
 window.addEventListener('DOMContentLoaded', function(){
@@ -102,7 +95,7 @@ window.addEventListener('DOMContentLoaded', function(){
 		camera.attachControl(canvas, true);
 		camera.collisionRadius = new BABYLON.Vector3(0.5, 0.5, 0.5);
 		camera.checkCollisions = true;
-		//camera.maxZ = 100;
+		camera.maxZ = 1000;//better performance
 	}
 	var createChar = function (scene){
 
@@ -180,8 +173,8 @@ window.addEventListener('DOMContentLoaded', function(){
 	var vx = 0;
 	var vy = 0;
 	
-	//create the gun
-	var gun = createGun(1, 1, scene.getMeshByID("Box"), new BABYLON.Vector3(0, 1, 0), new BABYLON.Vector3(1, 1, 0) , scene);
+	//testing gun
+	//var gun = createGun(1, 1, scene.getMeshByID("Box"), new BABYLON.Vector3(0, 1, 0), new BABYLON.Vector3(1, 1, 0) , scene);
 	
 	//render loop 
 	engine.runRenderLoop(function(){
@@ -242,8 +235,7 @@ window.addEventListener('DOMContentLoaded', function(){
 	
 	//canvas click event 
 	canvas.addEventListener('click', function(event){
-		gun.shoot(); 
-		console.log(gun.firing);
+
 	});
 });
 
