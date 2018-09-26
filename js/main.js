@@ -176,6 +176,9 @@ window.addEventListener('DOMContentLoaded', function(){
 	//testing gun
 	//var gun = createGun(1, 1, scene.getMeshByID("Box"), new BABYLON.Vector3(0, 1, 0), new BABYLON.Vector3(1, 1, 0) , scene);
 	
+	//testing ui
+	UI_front();
+	
 	//render loop 
 	engine.runRenderLoop(function(){
 		var box = scene.getMeshByID("Box");
