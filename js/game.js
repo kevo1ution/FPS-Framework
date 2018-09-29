@@ -26,7 +26,7 @@ GAME.Instance = function(){
 			if(key != Children){
 				obj[key] = this[key];
 			}else{
-				for(k1 in this.Children){
+				for(var k1 in this.Children){
 					this.Children.k1.Clone(obj); //set the object as the parent of the cloned items
 				}
 			}
@@ -79,10 +79,8 @@ GAME.Instance = function(){
 	}
 	
 	this.FindFirstChild = function(name){
-		if(this.Children[name]){
-			return this.Children[name];
-		}
-		return null;
+		console.log(this.Children, this.Children[name]);
+		return this.Children[name];
 	};
 	
 	this.FindFirstChildOfClass = function(className){
@@ -94,11 +92,16 @@ GAME.Instance = function(){
 		return null;
 	}
 	
+	this.SetParent = function(par){
+		this.Parent = par;
+		par.Children[this.Name] = this;
+	}
+	
 	this.GetChildren = function(){
 		return this.Children;
 	}
 	
-	this.IsAncestorOf(descendant){
+	this.IsAncestorOf = function(descendant){
 		var par = descendant.Parent;
 		
 		while(par != null){
@@ -111,7 +114,7 @@ GAME.Instance = function(){
 		return false;
 	}
 	
-	this.IsDescendantOf(ancestor){
+	this.IsDescendantOf = function(ancestor){
 		var par = this.Parent;
 		
 		while(par != null){
@@ -127,6 +130,8 @@ GAME.Instance = function(){
 	this.IsA = function(className){
 		return this.ClassName == className;
 	}
+
+	
 }
 
 GAME.Character = function(){
@@ -153,3 +158,4 @@ GAME.Player = function(){
 		alert(msg);
 	}
 };
+

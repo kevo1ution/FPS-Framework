@@ -178,6 +178,12 @@ var startGame = function(){
 	canvas.addEventListener('click', function(event){
 
 	});	
+
+	
+	//testing instances
+	for(var k = 1, k <= 10, k++){
+		var temp = new GAME.Instance;
+	}
 };
 
 var gameOver = function(){
